@@ -1,0 +1,7 @@
+---
+- hosts: linux
+  remote_user: ansible
+  become: yes
+
+  roles:
+  - hardening

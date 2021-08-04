@@ -1,0 +1,10 @@
+---
+# handlers file for roles/hardening
+#
+- name: Reboot
+  reboot:
+    msg: "Reinicio del sistema por Ansible"
+
+- name: Reinicio SSH
+  service:
+    state: restarted

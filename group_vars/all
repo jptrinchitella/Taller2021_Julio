@@ -1,0 +1,3 @@
+server_name: www.ejemplo.com.uy
+server_admin: webmaster@ejemplo.com.uy
+server_directory: /var/www/ejemplo/html

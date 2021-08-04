@@ -1,0 +1,25 @@
+---
+# tasks file for roles/hardening
+#
+- name: Actualizo paquetes
+  apt:
+    name: '*'
+    state: latest
+    update_cache: yes
+  notify: Reboot
+  when: ansible_os_family == "Debian"
+
+- name: Actualizo paquetes
+  yum:
+    name: '*'
+    state: latest
+  notify: Reboot
+  when: ansible_os_family == "RedHat"
+
+- name: Configuro SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin='
+    line: "PermitRootLogin=no"
+  notify: Reinicio SSH
+    

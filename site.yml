@@ -1,0 +1,57 @@
+---
+- hosts: linux
+  remote_user: ansible
+  become: yes
+
+  roles:
+  - lamp
+
+  tasks:
+
+  - name: Create virtualhost directory
+    file:
+      path: "{{ server_directory }}"
+      state: directory
+      mode: 0755
+      
+  - name: Copy index file
+    copy:
+      src: ./files/index.html
+      dest: "{{ server_directory }}/index.html"
+      mode: 0644
+
+  - name: Configure virtual host
+    template:
+      src: ./templates/virtualhost.j2
+      dest: /etc/httpd/conf.d/virtualhost.conf
+    when: ansible_os_family == "RedHat"
+    notify: Restart apache Centos
+
+  - name: Configure virtual host
+    template:
+      src: ./templates/virtualhost.j2
+      dest: /etc/apache2/sites-available/virtualhost.conf
+    when: ansible_os_family == "Debian"
+
+  - name: Enable virtual host
+    shell: a2ensite virtualhost.conf
+    when: ansible_os_family == "Debian"
+    notify: Restart apache Ubuntu
+
+#  - name: Enable virtual host
+#    file:
+#      src: /etc/apache2/sites-available/virtualhost.conf
+#      dest: /etc/apache2/sites-enabled/virtualhost.conf
+#      state: link
+
+  handlers:
+
+  - name: Restart apache Centos
+    service:
+      name: httpd
+      state: restarted
+
+  - name: Restart apache Ubuntu
+    service:
+      name: apache2
+      state: restarted

@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+  ServerName {{ server_name }}
+  ServerAdmin {{ server_admin}}
+  DocumentRoot {{ server_directory }}
+
+  <Directory {{ server_directory }}>
+    AllowOverride None
+    Options -Indexes
+    Require all granted
+  </Directory>
+</VirtualHost>

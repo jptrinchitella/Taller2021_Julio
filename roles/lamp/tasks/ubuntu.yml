@@ -1,0 +1,34 @@
+---
+# tasks file for roles/lamp
+#
+- name: Instalo paquetes
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages }}"
+
+- name: Inicio servicios
+  service: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ services }}"
+
+- name: Agrego index.html
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+    mode: 0644
+
+- name: Abro puertos en firewall
+  ufw:
+    name: "{{ item }}"
+    state: enabled
+    rule: allow
+  loop:
+  - "Apache Full"
+  - "OpenSSH"
+
+
